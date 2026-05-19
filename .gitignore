@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Django specific
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Testing and Coverage
+.coverage
+htmlcov/
+nosetests.xml
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Editor specific (Optional but recommended)
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
+!/.env
