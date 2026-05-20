@@ -90,7 +90,7 @@ class Review(models.Model):
 
     # Contadores — se actualizan con signals (más adelante)
     likes_count = models.PositiveIntegerField(default=0)
-    save_count = models.PositiveIntegerField(default=0)
+    saves_count = models.PositiveIntegerField(default=0)
 
     # Timestamp
     created_at = models.DateTimeField(auto_now_add=True)

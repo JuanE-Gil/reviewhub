@@ -26,6 +26,7 @@ class RatingBreakdownSerializer(serializers.ModelSerializer):
         model = RatingBreakdown
         fields = ('id', 'label', 'score')
 
+
 class ReviewListSerializer(serializers.ModelSerializer):
     """
     Serializer ligero para listas — solo campos esenciales.
@@ -41,6 +42,7 @@ class ReviewListSerializer(serializers.ModelSerializer):
             'user', 'category_name',
             'likes_count', 'saves_count', 'created_at'
         )
+
 
 class ReviewDetailSerializer(serializers.ModelSerializer):
     """
@@ -116,5 +118,3 @@ class ReviewCreateUpdateSerializer(serializers.ModelSerializer):
                 RatingBreakdown.objects.create(review=instance, **item)
 
         return instance
-
-
