@@ -24,6 +24,7 @@ urlpatterns = [
     path('api/v1/auth/', include('apps.accounts.urls')),
     path('api/v1/', include('apps.reviews.urls')),
     path('api/v1/interactions/', include('apps.interactions.urls')),
+    path('api/v1/', include('apps.media.urls')),
 ]
 
 # Sirve archivos de media en desarrollo
