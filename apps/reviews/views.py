@@ -37,7 +37,7 @@ class ReviewListCreateView(generics.ListCreateAPIView):
     GET  → lista paginada de reseñas publicadas
     POST → crea una nueva reseña (requiere auth)
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'content', 'category__name']
     ordering_fields = ['created_at', 'score', 'likes_count']
