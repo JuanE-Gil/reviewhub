@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from apps.search.services import SearchService
 
 from .models import Category, Review
 from .serializers import (
@@ -93,6 +94,13 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
             if obj.user != request.user:
                 from rest_framework.exceptions import PermissionDenied
                 raise PermissionDenied('Solo el autor puede modificar esta reseña.')
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # registra la vista del usuario
+        SearchService.register_view(request.user, instance)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
 @api_view(['GET'])
