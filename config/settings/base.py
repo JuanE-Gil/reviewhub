@@ -24,6 +24,7 @@ THIRD_PARTY_APPS = [
     'allauth.socialaccount',
     'cloudinary_storage',
     'cloudinary',
+    'drf_spectacular',
 ]
 
 LOCAL_APPS = [
@@ -96,7 +97,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Configuración de allauth
-ACCOUNT_LOGIN_METHODS = {'email'}        # login solo con email
+ACCOUNT_LOGIN_METHODS = {'email'}  # login solo con email
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # en prod cambiar a 'mandatory'
 ACCOUNT_UNIQUE_EMAIL = True
@@ -113,12 +114,16 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.MultiPartParser',
         'rest_framework.parsers.FormParser',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'EXCEPTION_HANDLER': 'config.exceptions.custom_exception_handler',
 }
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'ROTATE_REFRESH_TOKENS': True,   # cada refresh genera un nuevo refresh token
+    'ROTATE_REFRESH_TOKENS': True,  # cada refresh genera un nuevo refresh token
 }
 
 # Cloudinary
@@ -137,3 +142,11 @@ cloudinary.config(
 
 # Reemplaza el storage por defecto con Cloudinary
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'ReviewHub API',
+    'DESCRIPTION': 'API para plataforma de reseñas por categorías',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+}

@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from apps.search.services import SearchService
+from drf_spectacular.utils import extend_schema
 
 from .models import Category, Review
 from .serializers import (
@@ -16,6 +17,7 @@ from .serializers import (
 
 # --- Categorías --------------------
 
+@extend_schema(responses=CategorySerializer(many=True))
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def category_list(request):
@@ -103,6 +105,7 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
 
+@extend_schema(responses=ReviewListSerializer(many=True))
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def my_reviews(request):

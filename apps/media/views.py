@@ -5,12 +5,14 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 import cloudinary.uploader
+from drf_spectacular.utils import extend_schema
 
 from apps.reviews.models import Review
 from .models import ReviewMedia
 from .serializers import ReviewMediaSerializer, ReviewMediaUploadSerializer
 
 
+@extend_schema(request=ReviewMediaUploadSerializer, responses=ReviewMediaSerializer)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
@@ -74,6 +76,7 @@ def upload_media(request, review_id):
     )
 
 
+@extend_schema(responses=ReviewMediaSerializer(many=True))
 @api_view(['GET'])
 def review_media_list(request, review_id):
     """Lista todos los archivos multimedia de una reseña."""
@@ -83,6 +86,7 @@ def review_media_list(request, review_id):
     return Response(serializer.data)
 
 
+@extend_schema(responses={204: None})
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_media(request, media_id):

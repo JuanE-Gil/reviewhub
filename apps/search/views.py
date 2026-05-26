@@ -1,12 +1,21 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
+from drf_spectacular.types import OpenApiTypes
 from apps.reviews.serializers import ReviewListSerializer
 from .models import SearchHistory
 from .services import SearchService
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter('q', OpenApiTypes.STR, description='Término de búsqueda'),
+        OpenApiParameter('category', OpenApiTypes.STR, description='Slug de categoría'),
+        OpenApiParameter('score', OpenApiTypes.INT, description='Puntaje 1-5'),
+    ],
+    responses=ReviewListSerializer(many=True)
+)
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def search_reviews(request):
@@ -34,6 +43,10 @@ def search_reviews(request):
     })
 
 
+@extend_schema(
+    parameters=[OpenApiParameter('q', OpenApiTypes.STR, description='Término para autocompletar')],
+    responses=OpenApiResponse(description='Sugerencias de títulos y categorías')
+)
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def search_suggestions(request):
@@ -46,6 +59,7 @@ def search_suggestions(request):
     return Response(suggestions)
 
 
+@extend_schema(responses=ReviewListSerializer(many=True))
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def personalized_suggestions(request):
@@ -58,6 +72,7 @@ def personalized_suggestions(request):
     return Response(serializer.data)
 
 
+@extend_schema(responses=OpenApiResponse(description='Historial de búsquedas'))
 @api_view(['GET', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def search_history(request):

@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Category, Review, RatingBreakdown
 from apps.accounts.serializers import UserProfileSerializer
+from drf_spectacular.utils import extend_schema_field
+from drf_spectacular.types import OpenApiTypes
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -11,6 +13,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'slug', 'description', 'icon', 'parent', 'subcategories')
 
     @staticmethod
+    @extend_schema_field(OpenApiTypes.OBJECT)
     def get_subcategories(obj):
         # solo retorna subcategorías si es categoría raíz
         if obj.parent is None:

@@ -4,12 +4,23 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema, inline_serializer, OpenApiResponse
+from rest_framework import serializers as drf_serializers
 
 from apps.reviews.models import Review
 from apps.reviews.serializers import ReviewListSerializer
 from .models import Like, SavedReview
 
 
+@extend_schema(
+    responses=inline_serializer(
+        name='LikeToggleResponse',
+        fields={
+            'liked': drf_serializers.BooleanField(),
+            'likes_count': drf_serializers.IntegerField(),
+        }
+    )
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def toggle_like(request, review_id):
@@ -41,6 +52,15 @@ def toggle_like(request, review_id):
     }, status=status.HTTP_201_CREATED)
 
 
+@extend_schema(                          # ← igual aquí
+    responses=inline_serializer(
+        name='SaveToggleResponse',
+        fields={
+            'saved': drf_serializers.BooleanField(),
+            'saves_count': drf_serializers.IntegerField(),
+        }
+    )
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def toggle_save(request, review_id):
@@ -65,6 +85,7 @@ def toggle_save(request, review_id):
     }, status=status.HTTP_201_CREATED)
 
 
+@extend_schema(responses=ReviewListSerializer(many=True))
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def saved_reviews(request):
@@ -78,6 +99,7 @@ def saved_reviews(request):
     return Response(serializer.data)
 
 
+@extend_schema(responses=OpenApiResponse(description='Estado de interacción'))
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def review_interaction_status(request, review_id):

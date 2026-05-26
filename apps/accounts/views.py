@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from drf_spectacular.utils import extend_schema
 from .serializers import (
     UserRegisterSerializer,
     UserLoginSerializer,
@@ -28,6 +28,7 @@ def get_tokens_for_user(user):
     }
 
 
+@extend_schema(request=UserRegisterSerializer, responses=UserProfileSerializer)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register_view(request):
@@ -44,6 +45,7 @@ def register_view(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@extend_schema(request=UserLoginSerializer, responses=UserProfileSerializer)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
@@ -71,6 +73,8 @@ def login_view(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@extend_schema(methods=['GET'], responses=UserProfileSerializer)
+@extend_schema(methods=['PATCH'], request=UserProfileSerializer, responses=UserProfileSerializer)
 @api_view(['GET', 'PATCH'])
 @permission_classes([IsAuthenticated])
 def profile_view(request):
