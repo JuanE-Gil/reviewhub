@@ -52,7 +52,7 @@ def toggle_like(request, review_id):
     }, status=status.HTTP_201_CREATED)
 
 
-@extend_schema(                          # ← igual aquí
+@extend_schema(
     responses=inline_serializer(
         name='SaveToggleResponse',
         fields={
